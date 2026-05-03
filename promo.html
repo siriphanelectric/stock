@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โปรโมชั่นสินค้า</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fdf8f3;
+  --white:#ffffff;
+  --text:#1a1008;
+  --muted:#8a7a6a;
+  --accent:#c8472a;
+  --accent2:#e8a020;
+  --green:#2a7a4a;
+  --border:#e8ddd0;
+  --card:#ffffff;
+  --shadow:0 2px 20px rgba(0,0,0,.08);
+}
+body{
+  font-family:'Sarabun',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* HERO */
+#hero{
+  background:linear-gradient(135deg,#1a0a00 0%,#3a1a08 50%,#c8472a 100%);
+  padding:48px 24px 40px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+#hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 70% 50%,rgba(200,70,42,.3) 0%,transparent 60%);
+  pointer-events:none;
+}
+#hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,6vw,52px);
+  font-weight:900;
+  color:#fff;
+  line-height:1.1;
+  margin-bottom:8px;
+  position:relative;
+}
+#hero .sub{
+  font-size:15px;
+  color:rgba(255,255,255,.7);
+  margin-bottom:28px;
+  position:relative;
+}
+#hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--accent2);
+  color:#1a0a00;
+  font-size:13px;
+  font-weight:800;
+  padding:6px 16px;
+  border-radius:20px;
+  position:relative;
+}
+
+/* SEARCH */
+#search-wrap{
+  padding:20px;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
+#search{
+  width:100%;
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:13px 18px 13px 44px;
+  font-size:16px;
+  font-family:'Sarabun',sans-serif;
+  color:var(--text);
+  outline:none;
+  transition:border-color .2s;
+}
+#search:focus{border-color:var(--accent)}
+.search-icon{
+  position:absolute;
+  left:34px;top:50%;
+  transform:translateY(-50%);
+  color:var(--muted);
+  font-size:18px;
+  pointer-events:none;
+}
+
+/* STATS BAR */
+#stats-bar{
+  display:flex;
+  gap:0;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;
+}
+.stat-item{
+  flex:1;
+  min-width:100px;
+  padding:12px 16px;
+  text-align:center;
+  border-right:1px solid var(--border);
+}
+.stat-item:last-child{border-right:none}
+.stat-n{font-size:22px;font-weight:800;color:var(--accent)}
+.stat-l{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* GRID */
+#grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:16px;
+  padding:20px;
+}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+  position:relative;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.12);}
+.card-img-wrap{
+  width:100%;
+  aspect-ratio:1;
+  overflow:hidden;
+  background:#f5ede4;
+  position:relative;
+}
+.card-img{
+  width:100%;height:100%;
+  object-fit:cover;
+  transition:transform .3s;
+}
+.card:hover .card-img{transform:scale(1.05);}
+.card-img-ph{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;
+  background:linear-gradient(135deg,#f5ede4,#ffe8d0);
+}
+.promo-badge{
+  position:absolute;top:10px;left:10px;
+  background:var(--accent);
+  color:#fff;
+  font-size:11px;font-weight:800;
+  padding:4px 10px;border-radius:20px;
+  box-shadow:0 2px 8px rgba(200,70,42,.4);
+}
+.card-body{padding:12px 14px 14px}
+.card-name{
+  font-size:13px;font-weight:700;
+  line-height:1.4;
+  color:var(--text);
+  margin-bottom:6px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.card-unit{font-size:11px;color:var(--muted);margin-bottom:8px}
+.price-promo{
+  font-size:20px;font-weight:800;
+  color:var(--accent);
+  line-height:1;
+}
+.price-retail-old{
+  font-size:12px;color:var(--muted);
+  text-decoration:line-through;
+  margin-top:2px;
+}
+.price-save{
+  display:inline-block;
+  background:#fff5e0;
+  color:var(--accent2);
+  font-size:11px;font-weight:700;
+  padding:2px 8px;border-radius:6px;
+  margin-top:4px;
+}
+.no-promo{
+  font-size:14px;font-weight:600;
+  color:var(--green);
+}
+
+/* DETAIL OVERLAY */
+#detail-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:flex-end;
+  backdrop-filter:blur(6px);
+}
+#detail-overlay.show{display:flex;}
+#detail-panel{
+  background:var(--white);
+  border-radius:24px 24px 0 0;
+  width:100%;max-height:90vh;
+  overflow-y:auto;
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+#detail-top{
+  position:relative;
+  padding:0;
+}
+#detail-big-img{
+  width:100%;aspect-ratio:16/9;
+  object-fit:cover;
+  display:block;
+}
+#detail-big-ph{
+  width:100%;aspect-ratio:16/9;
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;
+  background:linear-gradient(135deg,#f5ede4,#ffe8d0);
+}
+#close-btn{
+  position:absolute;top:14px;right:14px;
+  background:rgba(255,255,255,.9);
+  border:none;border-radius:50%;
+  width:36px;height:36px;
+  font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+#detail-content{padding:20px 20px 40px}
+#d-name{font-size:20px;font-weight:800;line-height:1.3;margin-bottom:4px}
+#d-unit{font-size:13px;color:var(--muted);margin-bottom:16px}
+
+.d-price-block{
+  background:linear-gradient(135deg,#fff5f3,#fff8e0);
+  border:1.5px solid #f0d0c0;
+  border-radius:16px;
+  padding:16px 18px;
+  margin-bottom:16px;
+}
+.d-promo-price{font-size:36px;font-weight:800;color:var(--accent);line-height:1}
+.d-promo-lbl{font-size:12px;color:var(--muted);margin-bottom:4px}
+.d-save-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.d-retail-old{font-size:15px;color:var(--muted);text-decoration:line-through}
+.d-save-badge{
+  background:var(--accent2);color:#1a0a00;
+  font-size:12px;font-weight:800;
+  padding:3px 10px;border-radius:20px;
+}
+
+.d-sec{margin-bottom:16px}
+.d-sec-title{
+  font-size:11px;font-weight:800;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;
+}
+.d-desc{font-size:15px;line-height:1.7;color:var(--text)}
+.d-hl{
+  font-size:14px;font-weight:600;
+  color:var(--green);line-height:1.7;
+}
+
+.price-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.pg-item{
+  background:var(--bg);
+  border-radius:10px;
+  padding:10px 12px;
+}
+.pg-lbl{font-size:11px;color:var(--muted)}
+.pg-val{font-size:15px;font-weight:700;color:var(--text);margin-top:2px}
+
+.d-note{
+  background:#fff8e0;
+  border:1px solid #f0d890;
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:14px;color:#7a5a00;font-weight:600;
+}
+
+/* LOADING */
+#loading{
+  text-align:center;padding:80px 20px;
+  color:var(--muted);font-size:16px;
+}
+#empty{display:none;text-align:center;padding:80px 20px;color:var(--muted);font-size:16px}
+
+/* FOOTER */
+#footer{
+  text-align:center;
+  padding:24px;
+  color:var(--muted);
+  font-size:13px;
+  border-top:1px solid var(--border);
+  margin-top:20px;
+}
+
+@media(min-width:600px){
+  #grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
+  #detail-big-img,#detail-big-ph{aspect-ratio:2/1}
+}
+</style>
+</head>
+<body>
+
+<div id="hero">
+  <h1>🔥 โปรโมชั่นสินค้า</h1>
+  <div class="sub">ราคาพิเศษ อัปเดตตลอดเวลา</div>
+  <div id="hero-badge">✨ ราคาดีที่สุด</div>
+</div>
+
+<div id="search-wrap" style="position:relative">
+  <span class="search-icon">🔍</span>
+  <input id="search" type="text" placeholder="ค้นหาสินค้า...">
+</div>
+
+<div id="stats-bar">
+  <div class="stat-item"><div class="stat-n" id="s-total">-</div><div class="stat-l">สินค้าในโปร</div></div>
+  <div class="stat-item"><div class="stat-n" id="s-promo" style="color:var(--accent)">-</div><div class="stat-l">⭐ แนะนำพิเศษ</div></div>
+</div>
+
+<div id="loading">⏳ กำลังโหลดสินค้า...</div>
+<div id="grid"></div>
+<div id="empty">ไม่พบสินค้าที่ค้นหา</div>
+
+<div id="footer">
+  ราคาอาจมีการเปลี่ยนแปลงโดยไม่แจ้งล่วงหน้า · กด 🔄 เพื่ออัปเดตราคาล่าสุด<br>
+  <button onclick="loadAll()" style="margin-top:10px;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif">🔄 อัปเดตราคา</button>
+</div>
+
+<!-- DETAIL -->
+<div id="detail-overlay">
+  <div id="detail-panel">
+    <div id="detail-top">
+      <div id="detail-big-ph">📦</div>
+      <img id="detail-big-img" src="" alt="" style="display:none">
+      <button id="close-btn" onclick="closeDetail()">✕</button>
+    </div>
+    <div id="detail-content">
+      <div id="d-name"></div>
+      <div id="d-unit"></div>
+      <div id="d-price-area"></div>
+      <div id="d-desc-area"></div>
+      <div id="d-hl-area"></div>
+      <div id="d-prices-area"></div>
+      <div id="d-note-area"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== ใส่ URL Apps Script ตรงนี้ =====
+const API='https://script.google.com/macros/s/AKfycbxk7x5aRP5NOC9TPzgh8HlOBjivVfSEKl1otXUmYNLsl_eyBU0GU1FmarKP1U_D1VCT/exec';
+
+let products=[];
+let searchTimer=null;
+
+function apiFetch(p){
+  return new Promise((resolve,reject)=>{
+    const cb='cb'+Date.now();
+    const s=document.createElement('script');
+    window[cb]=data=>{resolve(data);delete window[cb];s.remove();};
+    s.onerror=()=>{reject(new Error('err'));s.remove();};
+    s.src=API+'?'+new URLSearchParams({...p,callback:cb});
+    document.head.appendChild(s);
+    setTimeout(()=>{if(window[cb]){reject(new Error('timeout'));delete window[cb];s.remove();}},30000);
+  });
+}
+
+async function loadAll(){
+  document.getElementById('loading').style.display='block';
+  document.getElementById('loading').textContent='⏳ กำลังโหลดสินค้า... รอสักครู่';
+  document.getElementById('grid').innerHTML='';
+  try{
+    let all=[],offset=0;
+    let round=0;
+    while(round<20){
+      round++;
+      document.getElementById('loading').textContent=`⏳ กำลังโหลด... (${all.length} รายการ)`;
+      const d=await apiFetch({action:'getProducts',limit:50,offset});
+      if(d.status==='ok'&&d.data&&d.data.length){
+        all=[...all,...d.data];
+        if(!d.has_more)break;
+        offset+=50;
+      }else break;
+    }
+    products=all;
+    renderGrid(products);
+    updateStats(products);
+  }catch(e){
+    document.getElementById('loading').textContent='❌ โหลดไม่ได้ กด "อัปเดตราคา" อีกครั้ง';
+    console.error(e);
+    return;
+  }
+  document.getElementById('loading').style.display='none';
+}
+
+function updateStats(list){
+  const featured=list.filter(p=>p.promo_badge&&String(p.promo_badge).trim());
+  const promo=list.filter(p=>String(p.show_promo)==='1');
+  document.getElementById('s-total').textContent=list.length;
+  document.getElementById('s-promo').textContent=featured.length||promo.length;
+}
+
+function iSrc(p){
+  if(p.image_url&&String(p.image_url).startsWith('http'))return p.image_url;
+  if(p.image_id&&String(p.image_id).length>10)return`https://drive.google.com/thumbnail?id=${p.image_id}&sz=w400`;
+  return null;
+}
+
+function fmt(v){
+  if(!v||Number(v)===0)return null;
+  return Number(v).toLocaleString('th-TH',{minimumFractionDigits:0,maximumFractionDigits:0});
+}
+
+function calcSave(promo,retail){
+  if(!promo||!retail||Number(retail)===0)return null;
+  const pct=Math.round((1-Number(promo)/Number(retail))*100);
+  return pct>0?pct:null;
+}
+
+function renderGrid(list){
+  const g=document.getElementById('grid'),e=document.getElementById('empty');
+  if(!list.length){g.innerHTML='';e.style.display='block';return;}
+  e.style.display='none';
+
+  // เรียง: promo_badge ก่อน → show_promo=1 → ที่เหลือ
+  const sorted=[...list].sort((a,b)=>{
+    const av=(a.promo_badge&&String(a.promo_badge).trim())?2:(String(a.show_promo)==='1'?1:0);
+    const bv=(b.promo_badge&&String(b.promo_badge).trim())?2:(String(b.show_promo)==='1'?1:0);
+    return bv-av;
+  });
+
+  g.innerHTML=sorted.map(p=>{
+    const src=iSrc(p);
+    const img=src?`<img class="card-img" src="${src}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'';
+    const ph=`<div class="card-img-ph" style="${src?'display:none':''}">📦</div>`;
+    const hasPromo=p.price_promo&&Number(p.price_promo)>0;
+    const save=calcSave(p.price_promo,p.price_retail);
+
+    const badgeText=p.promo_badge&&String(p.promo_badge).trim()?String(p.promo_badge).trim():(hasPromo?'🔥 โปร':null);
+    const badgeStyle=p.promo_badge&&String(p.promo_badge).trim()?'background:linear-gradient(135deg,#c8472a,#e8a020);font-size:12px;padding:5px 12px;box-shadow:0 2px 10px rgba(200,70,42,.5)':'';
+    const badge=badgeText?`<div class="promo-badge" style="${badgeStyle}">${badgeText}</div>`:'';
+    const cardStyle=p.promo_badge&&String(p.promo_badge).trim()?'border:2px solid var(--accent);box-shadow:0 4px 20px rgba(200,70,42,.15)':String(p.show_promo)==='1'?'border:2px solid var(--accent2)':'';
+
+    const priceHtml=hasPromo
+      ?`<div class="price-promo">฿${fmt(p.price_promo)}</div>${p.price_retail&&Number(p.price_retail)>0?`<div class="price-retail-old">ปกติ ฿${fmt(p.price_retail)}</div>`:''}${save?`<div class="price-save">ประหยัด ${save}%</div>`:''}`
+      :`<div class="no-promo">${p.price_retail&&Number(p.price_retail)>0?'฿'+fmt(p.price_retail):'ติดต่อสอบถาม'}</div>`;
+
+    return`<div class="card" onclick="openDetail('${p.id}')" style="${cardStyle}">
+      <div class="card-img-wrap">${img}${ph}${badge}</div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-unit">${p.unit||''}</div>
+        ${priceHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('search').oninput=function(){
+  const q=this.value.trim().toLowerCase();
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>{
+    if(!q){renderGrid(products);updateStats(products);return;}
+    const f=products.filter(p=>p.name.toLowerCase().includes(q)||String(p.id).toLowerCase().includes(q));
+    renderGrid(f);updateStats(f);
+  },300);
+};
+
+function openDetail(id){
+  const p=products.find(x=>String(x.id)===String(id));if(!p)return;
+  const src=iSrc(p);
+  const img=document.getElementById('detail-big-img');
+  const ph=document.getElementById('detail-big-ph');
+  if(src){img.src=src;img.style.display='block';ph.style.display='none';}
+  else{img.style.display='none';ph.style.display='flex';}
+  document.getElementById('d-name').textContent=p.name;
+  document.getElementById('d-unit').textContent=`รหัส: ${p.id} | หน่วย: ${p.unit||'-'}`;
+
+  const hasPromo=p.price_promo&&Number(p.price_promo)>0;
+  const save=calcSave(p.price_promo,p.price_retail);
+  if(hasPromo){
+    document.getElementById('d-price-area').innerHTML=`
+      <div class="d-price-block">
+        <div class="d-promo-lbl">🔥 ราคาโปรโมชั่น</div>
+        <div class="d-promo-price">฿${fmt(p.price_promo)}</div>
+        ${p.price_retail&&Number(p.price_retail)>0?`<div class="d-save-row"><span class="d-retail-old">ปกติ ฿${fmt(p.price_retail)}</span>${save?`<span class="d-save-badge">ประหยัด ${save}%</span>`:''}</div>`:''}
+      </div>`;
+  } else if(p.price_retail&&Number(p.price_retail)>0){
+    document.getElementById('d-price-area').innerHTML=`
+      <div class="d-price-block" style="background:linear-gradient(135deg,#f0fff5,#e8f8e0);border-color:#c0e8c0">
+        <div class="d-promo-lbl" style="color:var(--green)">ราคาแนะนำ</div>
+        <div class="d-promo-price" style="color:var(--green)">฿${fmt(p.price_retail)}</div>
+      </div>`;
+  } else {
+    document.getElementById('d-price-area').innerHTML=`<div class="d-price-block"><div class="d-promo-price" style="font-size:18px;color:var(--muted)">ติดต่อสอบถามราคา</div></div>`;
+  }
+
+  document.getElementById('d-desc-area').innerHTML=p.description?`<div class="d-sec"><div class="d-sec-title">รายละเอียด</div><div class="d-desc">${p.description}</div></div>`:'';
+  document.getElementById('d-hl-area').innerHTML=p.highlight?`<div class="d-sec"><div class="d-sec-title">✨ ไฮไลท์</div><div class="d-hl">${p.highlight}</div></div>`:'';
+
+  const prices=[];
+  if(p.price_credit&&Number(p.price_credit)>0) prices.push({l:'ราคาเครดิต',v:'฿'+fmt(p.price_credit)});
+  if(p.price_machine_retail&&Number(p.price_machine_retail)>0) prices.push({l:'ราคาเครื่อง (ปลีก)',v:'฿'+fmt(p.price_machine_retail)});
+  if(p.price_machine_wholesale&&Number(p.price_machine_wholesale)>0) prices.push({l:'ราคาเครื่อง (ส่ง)',v:'฿'+fmt(p.price_machine_wholesale)});
+  if(p.price_install_suggest&&Number(p.price_install_suggest)>0) prices.push({l:'พร้อมติดตั้ง (แนะนำ)',v:'฿'+fmt(p.price_install_suggest)});
+  if(p.price_install_min&&Number(p.price_install_min)>0) prices.push({l:'พร้อมติดตั้ง (ต่ำสุด)',v:'฿'+fmt(p.price_install_min)});
+  document.getElementById('d-prices-area').innerHTML=prices.length?`<div class="d-sec"><div class="d-sec-title">💰 ราคาอื่นๆ</div><div class="price-grid">${prices.map(x=>`<div class="pg-item"><div class="pg-lbl">${x.l}</div><div class="pg-val">${x.v}</div></div>`).join('')}</div></div>`:'';
+  document.getElementById('d-note-area').innerHTML=p.price_note?`<div class="d-note">📝 ${p.price_note}</div>`:'';
+
+  document.getElementById('detail-overlay').classList.add('show');
+}
+
+function closeDetail(){document.getElementById('detail-overlay').classList.remove('show');}
+document.getElementById('detail-overlay').onclick=e=>{if(e.target===e.currentTarget)closeDetail();};
+
+loadAll();
+</script>
+</body>
+</html>
